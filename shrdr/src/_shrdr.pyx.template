@@ -1,0 +1,135 @@
+# distutils: language = c++
+
+from libc.stdint cimport int16_t, int32_t, uint32_t, int64_t, uint64_t
+from libcpp cimport bool
+from .src._shrdr cimport Qpbo, ParallelQpbo, BlockIdx, NodeLabel
+
+cimport cython
+
+ctypedef int16_t CapInt16
+ctypedef int32_t CapInt32
+ctypedef int64_t CapInt64
+ctypedef float CapFloat32
+ctypedef double CapFloat64
+ctypedef uint32_t ArcIdxUInt32
+ctypedef uint64_t ArcIdxUInt64
+ctypedef uint32_t NodeIdxUInt32
+ctypedef uint64_t NodeIdxUInt64
+ctypedef int64_t FlowInt
+ctypedef double FlowFloat
+
+<template>
+cdef class Qpbo<ClassNameExt>:
+    cdef Qpbo[<CapType>, <FlowType>, <ArcType>, <NodeType>]* c_qpbo
+
+    def __cinit__(self, size_t expected_nodes=0, size_t expected_pairwise_terms=0, bool expect_nonsubmodular=True):
+        self.c_qpbo = new Qpbo[<CapType>, <FlowType>, <ArcType>, <NodeType>](expected_nodes, expected_pairwise_terms, expect_nonsubmodular)
+
+    def __dealloc__(self):
+        del self.c_qpbo
+
+    def add_node(self, size_t num):
+        return self.c_qpbo.add_node(num)
+
+    def add_unary_term(self, <NodeType> i, <CapType> e0, <CapType> e1):
+        self.c_qpbo.add_unary_term(i, e0, e1)
+
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
+    def add_unary_terms(self, <NodeType>[::1] i, <CapType>[::1] e0, <CapType>[::1] e1):
+        cdef Py_ssize_t length = i.shape[0]
+
+        assert i.shape[0] == e0.shape[0] == e1.shape[0]
+
+        for n in range(length):
+            self.c_qpbo.add_unary_term(i[n], e0[n], e1[n])
+
+    def add_pairwise_term(self, <NodeType> i, <NodeType> j, <CapType> e00, <CapType> e01, <CapType> e10, <CapType> e11):
+        self.c_qpbo.add_pairwise_term(i, j, e00, e01, e10, e11)
+
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
+    def add_pairwise_terms(self, <NodeType>[::1] i, <NodeType>[::1] j, <CapType>[::1] e00, <CapType>[::1] e01, <CapType>[::1] e10, <CapType>[::1] e11):
+        cdef Py_ssize_t length = i.shape[0]
+
+        assert i.shape[0] == j.shape[0] == e00.shape[0] == e01.shape[0] == e10.shape[0] == e11.shape[0]
+
+        for n in range(length):
+            self.c_qpbo.add_pairwise_term(i[n], j[n], e00[n], e01[n], e10[n], e11[n])
+
+    def get_label(self, <NodeType> i):
+        return self.c_qpbo.get_label(i)
+
+    def compute_twice_energy(self):
+        return self.c_qpbo.compute_twice_energy()
+
+    def solve(self):
+        self.c_qpbo.solve()
+
+    def compute_weak_persistencies(self):
+        self.c_qpbo.compute_weak_persistencies()
+</template>
+
+<template>
+cdef class ParallelQpbo<ClassNameExt>:
+    cdef ParallelQpbo[<CapType>, <FlowType>, <ArcType>, <NodeType>]* c_pqpbo
+
+    def __cinit__(self, size_t expected_nodes=0, size_t expected_pairwise_terms=0, bool expect_nonsubmodular=True, size_t expected_blocks=0):
+        self.c_pqpbo = new ParallelQpbo[<CapType>, <FlowType>, <ArcType>, <NodeType>](expected_nodes, expected_pairwise_terms, expect_nonsubmodular, expected_blocks)
+
+    def __dealloc__(self):
+        del self.c_pqpbo
+
+    def add_node(self, size_t num, BlockIdx block=0):
+        return self.c_pqpbo.add_node(num, block)
+
+    def add_unary_term(self, <NodeType> i, <CapType> e0, <CapType> e1):
+        self.c_pqpbo.add_unary_term(i, e0, e1)
+
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
+    def add_unary_terms(self, <NodeType>[::1] i, <CapType>[::1] e0, <CapType>[::1] e1):
+        cdef Py_ssize_t length = i.shape[0]
+
+        assert i.shape[0] == e0.shape[0] == e1.shape[0]
+
+        for n in range(length):
+            self.c_pqpbo.add_unary_term(i[n], e0[n], e1[n])
+
+    def add_pairwise_term(self, <NodeType> i, <NodeType> j, <CapType> e00, <CapType> e01, <CapType> e10, <CapType> e11):
+        self.c_pqpbo.add_pairwise_term(i, j, e00, e01, e10, e11)
+
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
+    def add_pairwise_terms(self, <NodeType>[::1] i, <NodeType>[::1] j, <CapType>[::1] e00, <CapType>[::1] e01, <CapType>[::1] e10, <CapType>[::1] e11):
+        cdef Py_ssize_t length = i.shape[0]
+
+        assert i.shape[0] == j.shape[0] == e00.shape[0] == e01.shape[0] == e10.shape[0] == e11.shape[0]
+
+        for n in range(length):
+            self.c_pqpbo.add_pairwise_term(i[n], j[n], e00[n], e01[n], e10[n], e11[n])
+
+    def add_pairwise_terms_parallel(self, <NodeType>[::1] i, <NodeType>[::1] j, <CapType>[::1] e00, <CapType>[::1] e01, <CapType>[::1] e10, <CapType>[::1] e11):
+        cdef Py_ssize_t length = i.shape[0]
+        assert i.shape[0] == j.shape[0] == e00.shape[0] == e01.shape[0] == e10.shape[0] == e11.shape[0]
+
+        self.c_pqpbo.add_pairwise_terms(length, &i[0], &j[0], &e00[0], &e01[0], &e10[0], &e11[0])
+
+    def get_label(self, <NodeType> i):
+        return self.c_pqpbo.get_label(i)
+
+    def compute_twice_energy(self):
+        return self.c_pqpbo.compute_twice_energy()
+
+    def solve(self):
+        self.c_pqpbo.solve()
+
+    def compute_weak_persistencies(self):
+        self.c_pqpbo.compute_weak_persistencies()
+
+    def get_num_threads(self):
+        return self.c_pqpbo.get_num_threads()
+
+    def set_num_threads(self, unsigned int num):
+        self.c_pqpbo.set_num_threads(num)
+</template>
