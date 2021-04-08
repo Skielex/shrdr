@@ -547,12 +547,12 @@ inline void ParallelQpbo<Cap, Flow, ArcIdx, NodeIdx>::add_pairwise_terms(
                 }
 
                 // Terminal arcs
-                // nodes_lock.lock();
+                nodes_lock.lock();
                 nodes[i].tr_cap += ci;
                 nodes[j].tr_cap += cj;
 
                 zero_energy += e00;
-                // nodes_lock.unlock();
+                nodes_lock.unlock();
             }
         }, t);
     }
