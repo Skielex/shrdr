@@ -115,10 +115,6 @@ private:
 
     int stage;
 
-    bool build_locks;
-    std::mutex arcs_lock;
-    std::mutex nodes_lock;
-
     void init_maxflow();
     void prepare_for_second_stage_transform();
 
