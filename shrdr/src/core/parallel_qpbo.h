@@ -344,8 +344,7 @@ inline ParallelQpbo<Cap, Flow, ArcIdx, NodeIdx>::ParallelQpbo(
     flow(0),
     node_shift(expected_nodes),
     arc_shift(0),
-    stage(0),
-    build_locks(false)
+    stage(0)
 {
     nodes.reserve((expect_nonsubmodular ? 2 : 1) * expected_nodes);
     node_blocks.reserve((expect_nonsubmodular ? 2 : 1) * expected_nodes);
