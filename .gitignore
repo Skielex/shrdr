@@ -1,6 +1,6 @@
 MANIFEST
-thinqpbo/src/_*.cpp
-thinqpbo/src/_*.h
+shrdr/src/_*.cpp
+shrdr/src/_*.h
 .vscode/
 
 # Created by https://www.gitignore.io/api/c,osx,c++,linux,python
