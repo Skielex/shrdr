@@ -85,6 +85,7 @@ def fill_templates(file_name, new_file_name, cap_types, arc_types, node_types):
         fh.write(new_content)
         fh.truncate()
 
+
 # Import types. We can't use normal import during setup, because _shrdr isn't compiled yet.
 types_spec = importlib.util.spec_from_file_location("shrdr.types", "shrdr/types.py")
 types = importlib.util.module_from_spec(types_spec)
@@ -106,11 +107,18 @@ setup(name="shrdr",
       url="https://github.com/Skielex/shrdr",
       packages=["shrdr"],
       classifiers=[
-          "Development Status :: 3 - Alpha", "Environment :: Console", "Intended Audience :: Developers",
-          "Intended Audience :: Science/Research", "License :: OSI Approved :: MIT License",
-          "Natural Language :: English", "Operating System :: OS Independent", "Programming Language :: C++",
-          "Programming Language :: Python", "Topic :: Scientific/Engineering :: Image Recognition",
-          "Topic :: Scientific/Engineering :: Artificial Intelligence", "Topic :: Scientific/Engineering :: Mathematics"
+          "Development Status :: 3 - Alpha",
+          "Environment :: Console",
+          "Intended Audience :: Developers",
+          "Intended Audience :: Science/Research",
+          "License :: OSI Approved :: MIT License",
+          "Natural Language :: English",
+          "Operating System :: OS Independent",
+          "Programming Language :: C++",
+          "Programming Language :: Python",
+          "Topic :: Scientific/Engineering :: Image Recognition",
+          "Topic :: Scientific/Engineering :: Artificial Intelligence",
+          "Topic :: Scientific/Engineering :: Mathematics",
       ],
       ext_modules=LazyCythonize(extensions),
       setup_requires=["Cython"])
