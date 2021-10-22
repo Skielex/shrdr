@@ -38,11 +38,6 @@ using BlockIdx = uint16_t; // We assume 65536 is enough blocks
 using Time = uint32_t;
 using Dist = uint16_t;
 
-enum TermType : int32_t {
-    SOURCE = 0,
-    SINK = 1
-};
-
 enum NodeArcSorting : int32_t {
     LIFO = 0,
     FIFO = 1,
@@ -79,7 +74,7 @@ public:
 
     void add_edge(NodeIdx i, NodeIdx j, Cap cap, Cap rev_cap, bool merge_duplicates = true);
 
-    TermType what_segment(NodeIdx i, TermType default_segment = SOURCE) const;
+    NodeLabel what_segment(NodeIdx i, NodeLabel default_segment = SOURCE) const;
 
     Flow maxflow();
     void init_maxflow();
@@ -413,8 +408,8 @@ inline ArcIdx ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_half_edge(
 }
 
 template <class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline TermType ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::what_segment(
-    NodeIdx i, TermType default_segment) const
+inline NodeLabel ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::what_segment(
+    NodeIdx i, NodeLabel default_segment) const
 {
     assert(i >= 0 && i < nodes.size());
     if (nodes[i].parent != INVALID_ARC) {

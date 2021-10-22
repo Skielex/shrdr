@@ -16,7 +16,7 @@ using Time = uint32_t;
 using Dist = uint16_t;
 
 template <class Cap, class Term, class Flow, class ArcIdx = int32_t, class NodeIdx = int32_t>
-class Graph {
+class Bk {
     static_assert(std::is_integral<ArcIdx>::value, "ArcIdx must be an integer type");
     static_assert(std::is_integral<NodeIdx>::value, "NodeIdx must be an integer type");
     static_assert(std::is_signed<Term>::value, "Term must be a signed type");
@@ -31,20 +31,15 @@ public:
     static const ArcIdx TERMINAL_ARC = INVALID_ARC - 1;
     static const ArcIdx ORPHAN_ARC = INVALID_ARC - 2;
 
-    enum TermType : int32_t {
-        SOURCE = 0,
-        SINK = 1
-    };
-
-    explicit Graph();
-    explicit Graph(size_t expected_nodes, size_t expected_arcs);
+    explicit Bk();
+    explicit Bk(size_t expected_nodes, size_t expected_arcs);
 
     void reserve_nodes(size_t num);
     void reserve_edges(size_t num);
 
     NodeIdx add_node(size_t num = 1);
 
-    void add_tweights(NodeIdx i, Term cap_source, Term cap_sink);
+    void add_tweight(NodeIdx i, Term cap_source, Term cap_sink);
 
     void add_edge(NodeIdx i, NodeIdx j, Cap cap, Cap rev_cap, bool merge_duplicates = true);
 
@@ -52,7 +47,7 @@ public:
 
     Flow get_maxflow() const noexcept { return flow; }
 
-    TermType what_segment(NodeIdx i, TermType default_segment = SOURCE) const;
+    NodeLabel what_segment(NodeIdx i, NodeLabel default_segment = SOURCE) const;
 
     inline size_t get_node_num() const noexcept { return nodes.size(); }
     inline size_t get_arc_num() const noexcept { return arcs.size(); }
@@ -151,7 +146,7 @@ private:
 
 
 template <class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::Graph() :
+Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::Bk() :
     nodes(),
     arcs(),
     flow(0),
@@ -163,27 +158,27 @@ Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::Graph() :
 {}
 
 template <class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::Graph(size_t expected_nodes, size_t expected_arcs) :
-    Graph()
+Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::Bk(size_t expected_nodes, size_t expected_arcs) :
+    Bk()
 {
     reserve_nodes(expected_nodes);
     reserve_edges(expected_arcs);
 }
 
 template <class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::reserve_nodes(size_t num)
+inline void Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::reserve_nodes(size_t num)
 {
     nodes.reserve(num);
 }
 
 template <class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::reserve_edges(size_t num)
+inline void Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::reserve_edges(size_t num)
 {
     arcs.reserve(2 * num);
 }
 
 template <class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline NodeIdx Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_node(size_t num)
+inline NodeIdx Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::add_node(size_t num)
 {
     NodeIdx crnt = nodes.size();
 
@@ -199,7 +194,7 @@ inline NodeIdx Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_node(size_t num)
 }
 
 template <class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_tweights(NodeIdx i, Term cap_source, Term cap_sink)
+inline void Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::add_tweight(NodeIdx i, Term cap_source, Term cap_sink)
 {
     assert(i >= 0 && i < nodes.size());
     Term delta = nodes[i].tr_cap;
@@ -213,7 +208,7 @@ inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_tweights(NodeIdx i, Ter
 }
 
 template <class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_edge(
+inline void Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::add_edge(
     NodeIdx i, NodeIdx j, Cap cap, Cap rev_cap, bool merge_duplicates)
 {
     assert(i >= 0 && i < nodes.size());
@@ -238,7 +233,7 @@ inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_edge(
 }
 
 template <class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_half_edge(
+inline void Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::add_half_edge(
     NodeIdx from, NodeIdx to, Cap cap, bool merge_duplicates)
 {
     ArcIdx ai;
@@ -264,8 +259,7 @@ inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_half_edge(
 }
 
 template <class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline typename Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::TermType
-Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::what_segment(NodeIdx i, TermType default_segment) const
+inline NodeLabel Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::what_segment(NodeIdx i, NodeLabel default_segment) const
 {
     if (nodes[i].parent != INVALID_ARC) {
         return (nodes[i].is_sink) ? SINK : SOURCE;
@@ -275,14 +269,14 @@ Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::what_segment(NodeIdx i, TermType defaul
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::mark_node(NodeIdx i)
+inline void Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::mark_node(NodeIdx i)
 {
     make_active(i);
     nodes[i].is_marked = true;
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline Flow Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::maxflow(bool reuse_trees)
+inline Flow Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::maxflow(bool reuse_trees)
 {
     if (reuse_trees) {
         init_maxflow_reuse_trees();
@@ -355,7 +349,7 @@ inline Flow Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::maxflow(bool reuse_trees)
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::init_maxflow()
+inline void Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::init_maxflow()
 {
     first_active = INVALID_NODE;
     last_active = INVALID_NODE;
@@ -380,7 +374,7 @@ inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::init_maxflow()
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::init_maxflow_reuse_trees()
+inline void Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::init_maxflow_reuse_trees()
 {
     NodeIdx i = first_active;
 
@@ -458,7 +452,7 @@ inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::init_maxflow_reuse_trees()
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::make_active(NodeIdx i)
+inline void Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::make_active(NodeIdx i)
 {
     if (nodes[i].next_active == INVALID_NODE) {
         // It's not in the active list yet
@@ -474,21 +468,21 @@ inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::make_active(NodeIdx i)
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::make_front_orphan(NodeIdx i)
+inline void Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::make_front_orphan(NodeIdx i)
 {
     nodes[i].parent = ORPHAN_ARC;
     orphan_nodes.push_front(i);
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::make_back_orphan(NodeIdx i)
+inline void Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::make_back_orphan(NodeIdx i)
 {
     nodes[i].parent = ORPHAN_ARC;
     orphan_nodes.push_back(i);
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline NodeIdx Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::next_active()
+inline NodeIdx Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::next_active()
 {
     NodeIdx i;
     // Pop nodes from the active list until we find a valid one or run out of nodes
@@ -513,7 +507,7 @@ inline NodeIdx Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::next_active()
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::augment(ArcIdx middle_idx)
+inline void Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::augment(ArcIdx middle_idx)
 {
     Arc& middle = arcs[middle_idx];
     Arc& middle_sister = sister(middle_idx);
@@ -533,7 +527,7 @@ inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::augment(ArcIdx middle_idx)
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline Term Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::tree_bottleneck(NodeIdx start, bool source_tree) const
+inline Term Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::tree_bottleneck(NodeIdx start, bool source_tree) const
 {
     NodeIdx i = start;
     Term bottleneck = std::numeric_limits<Term>::max();
@@ -551,7 +545,7 @@ inline Term Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::tree_bottleneck(NodeIdx sta
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::augment_tree(
+inline void Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::augment_tree(
     NodeIdx start, Term bottleneck, bool source_tree)
 {
     NodeIdx i = start;
@@ -576,14 +570,14 @@ inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::augment_tree(
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline ArcIdx Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::grow_search_tree(NodeIdx start)
+inline ArcIdx Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::grow_search_tree(NodeIdx start)
 {
     return nodes[start].is_sink ? grow_search_tree_impl<false>(start) : grow_search_tree_impl<true>(start);
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
 template<bool source>
-inline ArcIdx Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::grow_search_tree_impl(NodeIdx start_idx)
+inline ArcIdx Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::grow_search_tree_impl(NodeIdx start_idx)
 {
     const Node& start = nodes[start_idx];
     ArcIdx ai;
@@ -617,7 +611,7 @@ inline ArcIdx Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::grow_search_tree_impl(Nod
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::process_orphan(NodeIdx i)
+inline void Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::process_orphan(NodeIdx i)
 {
     if (nodes[i].is_sink) {
         process_orphan_impl<false>(i);
@@ -628,7 +622,7 @@ inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::process_orphan(NodeIdx i)
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
 template<bool source>
-inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::process_orphan_impl(NodeIdx i)
+inline void Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::process_orphan_impl(NodeIdx i)
 {
     Node &n = nodes[i];
     static const int32_t INF_DIST = std::numeric_limits<int32_t>::max();

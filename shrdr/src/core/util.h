@@ -25,6 +25,12 @@
 
 namespace shrdr {
 
+enum NodeLabel : int8_t {
+    SOURCE = 0,
+    SINK = 1,
+    UNKNOWN = -1,
+};
+
 class Barrier {
     // Bare bones thread barrier implemenation adapted from boost::barrier
 public:

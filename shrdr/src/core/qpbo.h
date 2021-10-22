@@ -21,12 +21,6 @@ namespace shrdr {
 using Time = uint32_t;
 using Dist = uint16_t;
 
-enum NodeLabel : int8_t {
-    SOURCE = 0,
-    SINK = 1,
-    UNKNOWN = -1,
-};
-
 template <
     class Cap,
     class Flow = typename std::conditional<std::is_floating_point<Cap>::value, double, int64_t>::type,
