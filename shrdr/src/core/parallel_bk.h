@@ -1,5 +1,5 @@
-#ifndef REIMPLS_PARALLEL_GRAPH_H__
-#define REIMPLS_PARALLEL_GRAPH_H__
+#ifndef SHRDR_PARALLEL_GRAPH_H__
+#define SHRDR_PARALLEL_GRAPH_H__
 
 #include <list>
 #include <unordered_map>
@@ -32,7 +32,7 @@ struct hash<std::pair<uint16_t, uint16_t>> {
 
 } // namespace std
 
-namespace reimpls {
+namespace shrdr {
 
 using BlockIdx = uint16_t; // We assume 65536 is enough blocks
 using Time = uint32_t;
@@ -182,7 +182,7 @@ private:
     };
 
 #pragma pack (1)
-    struct REIMPLS_PACKED Node {
+    struct SHRDR_PACKED Node {
         ArcIdx first; // First out-going arc.
         ArcIdx parent; // Arc to parent node in search tree
         NodeIdx next_active; // Index of next active node (or itself if this is the last one)
@@ -205,7 +205,7 @@ private:
             is_sink(false) {}
     };
 
-    struct REIMPLS_PACKED Arc {
+    struct SHRDR_PACKED Arc {
         NodeIdx head; // Node this arc points to.
         ArcIdx next; // Next arc with the same originating node
 
@@ -270,7 +270,7 @@ inline NodeIdx ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_node(size_t 
     assert(nodes.size() == node_blocks.size());
     NodeIdx crnt = nodes.size();
 
-#ifndef REIMPLS_NO_OVERFLOW_CHECKS
+#ifndef SHRDR_NO_OVERFLOW_CHECKS
     if (crnt > std::numeric_limits<NodeIdx>::max() - num) {
         throw std::overflow_error("Node count exceeds capacity of index type. "
             "Please increase capacity of NodeIdx type.");
@@ -319,7 +319,7 @@ inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_edge(
         return;
     }
 
-#ifndef REIMPLS_NO_OVERFLOW_CHECKS
+#ifndef SHRDR_NO_OVERFLOW_CHECKS
     if (arcs.size() > std::numeric_limits<ArcIdx>::max() - 2) {
         throw std::overflow_error("Arc count exceeds capacity of index type. "
             "Please increase capacity of ArcIdx type.");
@@ -631,7 +631,7 @@ inline Flow ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::maxflow
         // At this point i must point to a valid active node
         ArcIdx source_sink_connector = grow_search_tree(i);
 
-#ifndef REIMPLS_NO_OVERFLOW_CHECKS
+#ifndef SHRDR_NO_OVERFLOW_CHECKS
         // Check for overflow in time variable.
         if (time == std::numeric_limits<Time>::max()) {
             throw std::overflow_error("Overflow in 'time' variable. Please increase capacity of Time type.");
@@ -999,6 +999,6 @@ inline bool ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::should_activate(Nod
         (ni.parent != INVALID_ARC && nj.parent != INVALID_ARC && ni.is_sink != nj.is_sink);
 }
 
-} // namespace reimpls
+} // namespace shrdr
 
-#endif // REIMPLS_PARALLEL_GRAPH_H__
+#endif // SHRDR_PARALLEL_GRAPH_H__

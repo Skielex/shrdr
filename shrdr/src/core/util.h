@@ -6,24 +6,24 @@
 #include <cassert>
 
 #ifdef __clang__
-#define MBK_PACKED __attribute__((packed))
+#define SHRDR_PACKED __attribute__((packed))
 #else
-#define MBK_PACKED
+#define SHRDR_PACKED
 #endif
 
 #ifdef _MSC_VER
-#define MBK_ALWAYS_INLINE __forceinline
+#define SHRDR_ALWAYS_INLINE __forceinline
 #else
-#define MBK_ALWAYS_INLINE __attribute__((always_inline))
+#define SHRDR_ALWAYS_INLINE __attribute__((always_inline))
 #endif
 
 #ifdef _MSC_VER
-#define MBK_NO_INLINE __declspec(noinline)
+#define SHRDR_NO_INLINE __declspec(noinline)
 #else
-#define MBK_NO_INLINE __attribute__((noinline))
+#define SHRDR_NO_INLINE __attribute__((noinline))
 #endif
 
-namespace mbk {
+namespace shrdr {
 
 class Barrier {
     // Bare bones thread barrier implemenation adapted from boost::barrier
@@ -65,6 +65,6 @@ private:
     unsigned int generation;
 };
 
-} // namespace mbk
+} // namespace shrdr
 
 #endif // UTIL_H__

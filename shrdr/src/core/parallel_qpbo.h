@@ -1,5 +1,5 @@
-#ifndef MBK_PARALLEL_QPBO_H__
-#define MBK_PARALLEL_QPBO_H__
+#ifndef SHRDR_PARALLEL_QPBO_H__
+#define SHRDR_PARALLEL_QPBO_H__
 
 #include <list>
 #include <unordered_map>
@@ -21,7 +21,7 @@
 
 #include "util.h"
 
-namespace mbk {
+namespace shrdr {
 
 using BlockIdx = uint16_t; // We assume 65536 is enough blocks
 using BoundaryKey = uint32_t; // Must be 2 x sizeof(BlockIdx)
@@ -262,17 +262,17 @@ private:
     };
 
 #pragma pack (1)
-    struct MBK_PACKED Node {
+    struct SHRDR_PACKED Node {
         ArcIdx first; // First out-going arc.
         NodeIdx next_active; // Index of next active node (or itself if this is the last one)
 
         union {
-            struct MBK_PACKED {
+            struct SHRDR_PACKED {
                 ArcIdx parent; // Arc to parent node in search tree
                 Time timestamp; // Timestamp showing when dist was computed.
                 Dist dist; // Distance to terminal.
             };
-            struct MBK_PACKED {
+            struct SHRDR_PACKED {
                 ArcIdx dfs_current;
                 NodeIdx dfs_parent;
                 int32_t region;
@@ -296,7 +296,7 @@ private:
             label(UNKNOWN) {}
     };
 
-    struct MBK_PACKED Arc {
+    struct SHRDR_PACKED Arc {
         NodeIdx head; // Node this arc points to.
         ArcIdx next; // Next arc with the same originating node
 
@@ -360,7 +360,7 @@ inline NodeIdx ParallelQpbo<Cap, Flow, ArcIdx, NodeIdx>::add_node(size_t num, Bl
     assert(nodes.size() == node_blocks.size());
     NodeIdx crnt = nodes.size();
 
-#ifndef MBK_NO_OVERFLOW_CHECKS
+#ifndef SHRDR_NO_OVERFLOW_CHECKS
     if (crnt > std::numeric_limits<NodeIdx>::max() - num) {
         throw std::overflow_error("Node count exceeds capacity of index type. "
             "Please increase capacity of NodeIdx type.");
@@ -404,10 +404,10 @@ inline void ParallelQpbo<Cap, Flow, ArcIdx, NodeIdx>::add_unary_term(NodeIdx i, 
 }
 
 template<class Cap, class Flow, class ArcIdx, class NodeIdx>
-MBK_ALWAYS_INLINE inline void ParallelQpbo<Cap, Flow, ArcIdx, NodeIdx>::add_pairwise_term(
+SHRDR_ALWAYS_INLINE inline void ParallelQpbo<Cap, Flow, ArcIdx, NodeIdx>::add_pairwise_term(
     NodeIdx i, NodeIdx j, Cap e00, Cap e01, Cap e10, Cap e11)
 {
-#ifndef MBK_NO_OVERFLOW_CHECKS
+#ifndef SHRDR_NO_OVERFLOW_CHECKS
     if (arcs.size() > std::numeric_limits<ArcIdx>::max() - 2) {
         throw std::overflow_error("Arc count exceeds capacity of index type. "
             "Please increase capacity of ArcIdx type.");
@@ -1260,7 +1260,7 @@ inline Flow ParallelQpbo<Cap, Flow, ArcIdx, NodeIdx>::QpboBlock::maxflow()
         // At this point i must point to a valid active node
         ArcIdx source_sink_connector = grow_search_tree(i);
 
-#ifndef MBK_NO_OVERFLOW_CHECKS
+#ifndef SHRDR_NO_OVERFLOW_CHECKS
         // Check for overflow in time variable.
         if (time == std::numeric_limits<Time>::max()) {
             throw std::overflow_error("Overflow in 'time' variable. Please increase capacity of Time type.");
@@ -1674,6 +1674,6 @@ inline void ParallelQpbo<Cap, Flow, ArcIdx, NodeIdx>::compute_weak_persistencies
     }
 }
 
-} // namespace mbk
+} // namespace shrdr
 
-#endif // MBK_PARALLEL_QPBO_H__
+#endif // SHRDR_PARALLEL_QPBO_H__

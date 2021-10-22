@@ -7,7 +7,7 @@ from libcpp cimport bool
 ctypedef uint16_t BlockIdx
 ctypedef int8_t NodeLabel
 
-cdef extern from "core/qpbo.h" namespace "mbk":
+cdef extern from "core/qpbo.h" namespace "shrdr":
     cdef cppclass Qpbo[Cap, Flow, ArcIdx, NodeIdx]:
         Qpbo(size_t expected_nodes, size_t expected_pairwise_terms, bool expect_nonsubmodular)
         NodeIdx add_node(int num)
@@ -18,7 +18,7 @@ cdef extern from "core/qpbo.h" namespace "mbk":
         void solve()
         void compute_weak_persistencies()
 
-cdef extern from "core/parallel_qpbo.h" namespace "mbk":
+cdef extern from "core/parallel_qpbo.h" namespace "shrdr":
     cdef cppclass ParallelQpbo[Cap, Flow, ArcIdx, NodeIdx]:
         ParallelQpbo(size_t expected_nodes, size_t expected_pairwise_terms, bool expect_nonsubmodular, size_t expected_blocks)
         NodeIdx add_node(int num, BlockIdx block)

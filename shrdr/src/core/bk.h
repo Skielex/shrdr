@@ -1,5 +1,5 @@
-#ifndef REIMPLS_GRAPH_H__
-#define REIMPLS_GRAPH_H__
+#ifndef SHRDR_GRAPH_H__
+#define SHRDR_GRAPH_H__
 
 #include <vector>
 #include <deque>
@@ -10,7 +10,7 @@
 
 #include "util.h"
 
-namespace reimpls {
+namespace shrdr {
 
 using Time = uint32_t;
 using Dist = uint16_t;
@@ -72,7 +72,7 @@ private:
     Time time;
 
 #pragma pack (1)
-    struct REIMPLS_PACKED Node {
+    struct SHRDR_PACKED Node {
         ArcIdx first; // First out-going arc.
         ArcIdx parent; // Arc to parent node in search tree
         NodeIdx next_active; // Index of next active node (or itself if this is the last one)
@@ -96,7 +96,7 @@ private:
             is_sink(false) {}
     };
 
-    struct REIMPLS_PACKED Arc {
+    struct SHRDR_PACKED Arc {
         ArcIdx next; // Next arc with the same originating node
         NodeIdx head; // Node this arc points to.
 
@@ -187,7 +187,7 @@ inline NodeIdx Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_node(size_t num)
 {
     NodeIdx crnt = nodes.size();
 
-#ifndef REIMPLS_NO_OVERFLOW_CHECKS
+#ifndef SHRDR_NO_OVERFLOW_CHECKS
     if (crnt > std::numeric_limits<NodeIdx>::max() - num) {
         throw std::overflow_error("Node count exceeds capacity of index type. "
             "Please increase capacity of NodeIdx type.");
@@ -226,7 +226,7 @@ inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_edge(
         return;
     }
 
-#ifndef REIMPLS_NO_OVERFLOW_CHECKS
+#ifndef SHRDR_NO_OVERFLOW_CHECKS
     if (arcs.size() > std::numeric_limits<ArcIdx>::max() - 2) {
         throw std::overflow_error("Arc count exceeds capacity of index type. "
             "Please increase capacity of ArcIdx type.");
@@ -318,7 +318,7 @@ inline Flow Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::maxflow(bool reuse_trees)
         // At this point i must point to a valid active node
         ArcIdx source_sink_connector = grow_search_tree(i);
 
-#ifndef REIMPLS_NO_OVERFLOW_CHECKS
+#ifndef SHRDR_NO_OVERFLOW_CHECKS
         // Check for overflow in time variable.
         if (time == std::numeric_limits<Time>::max()) {
             throw std::overflow_error("Overflow in 'time' variable. Please increase capacity of Time type.");
@@ -701,6 +701,6 @@ inline void Graph<Cap, Term, Flow, ArcIdx, NodeIdx>::process_orphan_impl(NodeIdx
     }
 }
 
-} // namespace reimpls
+} // namespace shrdr
 
-#endif // REIMPLS_GRAPH_H__
+#endif // SHRDR_GRAPH_H__
