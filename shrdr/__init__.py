@@ -1,1 +1,1 @@
-from .shrdr import parallel_qpbo, qpbo, bk
+from .shrdr import bk, parallel_bk, parallel_qpbo, qpbo

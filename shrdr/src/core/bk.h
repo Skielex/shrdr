@@ -1,5 +1,5 @@
-#ifndef SHRDR_GRAPH_H__
-#define SHRDR_GRAPH_H__
+#ifndef SHRDR_BK_H__
+#define SHRDR_BK_H__
 
 #include <vector>
 #include <deque>
@@ -697,4 +697,4 @@ inline void Bk<Cap, Term, Flow, ArcIdx, NodeIdx>::process_orphan_impl(NodeIdx i)
 
 } // namespace shrdr
 
-#endif // SHRDR_GRAPH_H__
+#endif // SHRDR_BK_H__

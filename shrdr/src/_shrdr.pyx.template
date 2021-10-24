@@ -2,7 +2,7 @@
 
 from libc.stdint cimport int8_t, int16_t, int32_t, uint32_t, int64_t, uint64_t
 from libcpp cimport bool
-from .src._shrdr cimport BlockIdx, NodeLabel, Qpbo, ParallelQpbo, Bk
+from .src._shrdr cimport BlockIdx, NodeLabel, Qpbo, ParallelQpbo, Bk, ParallelBk
 
 cimport cython
 
@@ -184,4 +184,56 @@ cdef class Bk<ClassNameExt>:
 
     def mark_node(self, <NodeType> i):
         self.c_bk.mark_node(i)
+</template>
+
+<template>
+cdef class ParallelBk<ClassNameExt>:
+    cdef ParallelBk[<CapType>, <TermType>, <FlowType>, <ArcType>, <NodeType>]* c_pbk
+
+    def __cinit__(self, size_t expected_nodes=0, size_t expected_pairwise_terms=0, size_t expected_blocks=0):
+        self.c_pbk = new ParallelBk[<CapType>, <TermType>, <FlowType>, <ArcType>, <NodeType>](expected_nodes, expected_pairwise_terms, expected_blocks)
+
+    def __dealloc__(self):
+        del self.c_pbk
+
+    def add_node(self, size_t num, BlockIdx block):
+        return self.c_pbk.add_node(num, block)
+
+    def add_tweight(self, <NodeType> i, <TermType> cap_source, <TermType> cap_sink):
+        self.c_pbk.add_tweight(i, cap_source, cap_sink)
+
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
+    def add_tweights(self, <NodeType>[::1] i, <TermType>[::1] cap_source, <TermType>[::1] cap_sink):
+        cdef Py_ssize_t length = i.shape[0]
+
+        assert i.shape[0] == cap_source.shape[0] == cap_sink.shape[0]
+
+        for n in range(length):
+            self.c_pbk.add_tweight(i[n], cap_source[n], cap_sink[n])
+
+    def add_edge(self, <NodeType> i, <NodeType> j, <CapType> cap, <CapType> rev_cap, bool merge_duplicates=False):
+        self.c_pbk.add_edge(i, j, cap, rev_cap, merge_duplicates)
+
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
+    def add_edges(self, <NodeType>[::1] i, <NodeType>[::1] j, <CapType>[::1] cap, <CapType>[::1] rev_cap, bool merge_duplicates=False):
+        cdef Py_ssize_t length = i.shape[0]
+
+        assert i.shape[0] == j.shape[0] == cap.shape[0] == rev_cap.shape[0]
+
+        for n in range(length):
+            self.c_pbk.add_edge(i[n], j[n], cap[n], rev_cap[n], merge_duplicates)
+
+    def maxflow(self):
+        return self.c_pbk.maxflow()
+
+    def what_segment(self, <NodeType> i, NodeLabel default_segment = NodeLabel.SOURCE):
+        return self.c_pbk.what_segment(i, default_segment)
+
+    def get_num_threads(self):
+        return self.c_pbk.get_num_threads()
+
+    def set_num_threads(self, unsigned int num):
+        self.c_pbk.set_num_threads(num)
 </template>

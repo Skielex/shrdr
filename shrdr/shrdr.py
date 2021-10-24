@@ -80,3 +80,16 @@ def bk(
     class_ctor = getattr(_shrdr, class_name)
     return class_ctor(expected_nodes, expected_pairwise_terms)
 
+def parallel_bk(
+    expected_nodes=0,
+    expected_pairwise_terms=0,
+    expected_blocks=0,
+    capacity_type='int32',
+    arc_index_type='uint32',
+    node_index_type='uint32',
+):
+    """Returns a new ParallelBk class instance of the specified type."""
+    class_name = _create_class_name('ParallelBk', capacity_type, arc_index_type, node_index_type)
+    class_ctor = getattr(_shrdr, class_name)
+    return class_ctor(expected_nodes, expected_pairwise_terms, expected_blocks)
+

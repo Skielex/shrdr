@@ -1,5 +1,5 @@
-#ifndef SHRDR_PARALLEL_GRAPH_H__
-#define SHRDR_PARALLEL_GRAPH_H__
+#ifndef SHRDR_PARALLEL_BK_H__
+#define SHRDR_PARALLEL_BK_H__
 
 #include <list>
 #include <unordered_map>
@@ -49,7 +49,7 @@ enum NodeArcSorting : int32_t {
 };
 
 template <class Cap, class Term, class Flow, class ArcIdx = uint32_t, class NodeIdx = uint32_t>
-class ParallelGraph {
+class ParallelBk {
     static_assert(std::is_integral<ArcIdx>::value, "ArcIdx must be an integer type");
     static_assert(std::is_integral<NodeIdx>::value, "NodeIdx must be an integer type");
     static_assert(std::is_signed<Term>::value, "Term must be a signed type");
@@ -66,11 +66,11 @@ public:
     static const ArcIdx TERMINAL_ARC = INVALID_ARC - 1;
     static const ArcIdx ORPHAN_ARC = INVALID_ARC - 2;
 
-    ParallelGraph(size_t expected_nodes, size_t expected_arcs, size_t expected_blocks);
+    ParallelBk(size_t expected_nodes, size_t expected_arcs, size_t expected_blocks);
 
     NodeIdx add_node(size_t num = 1, BlockIdx block = 0);
 
-    void add_tweights(NodeIdx i, Term cap_source, Term cap_sink);
+    void add_tweight(NodeIdx i, Term cap_source, Term cap_sink);
 
     void add_edge(NodeIdx i, NodeIdx j, Cap cap, Cap rev_cap, bool merge_duplicates = true);
 
@@ -238,7 +238,7 @@ private:
 
 
 template <class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::ParallelGraph(
+ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::ParallelBk(
     size_t expected_nodes, size_t expected_arcs, size_t expected_blocks) :
     ph1_dur(),
     bs_dur(),
@@ -260,7 +260,7 @@ ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::ParallelGraph(
 
 
 template <class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline NodeIdx ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_node(size_t num, BlockIdx block)
+inline NodeIdx ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::add_node(size_t num, BlockIdx block)
 {
     assert(nodes.size() == node_blocks.size());
     NodeIdx crnt = nodes.size();
@@ -285,7 +285,7 @@ inline NodeIdx ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_node(size_t 
 }
 
 template <class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_tweights(
+inline void ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::add_tweight(
     NodeIdx i, Term cap_source, Term cap_sink)
 {
     assert(i >= 0 && i < nodes.size());
@@ -301,7 +301,7 @@ inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_tweights(
 }
 
 template <class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_edge(
+inline void ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::add_edge(
     NodeIdx i, NodeIdx j, Cap cap, Cap rev_cap, bool merge_duplicates)
 {
     assert(i >= 0 && i < nodes.size());
@@ -336,7 +336,7 @@ inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_edge(
 }
 
 template <class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline ArcIdx ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_half_edge(
+inline ArcIdx ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::add_half_edge(
     NodeIdx from, NodeIdx to, Cap cap, bool merge_duplicates)
 {
     ArcIdx ai;
@@ -408,7 +408,7 @@ inline ArcIdx ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::add_half_edge(
 }
 
 template <class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline NodeLabel ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::what_segment(
+inline NodeLabel ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::what_segment(
     NodeIdx i, NodeLabel default_segment) const
 {
     assert(i >= 0 && i < nodes.size());
@@ -420,7 +420,7 @@ inline NodeLabel ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::what_segment(
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline Flow ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::maxflow()
+inline Flow ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::maxflow()
 {
     auto ph1_begin = std::chrono::system_clock::now();
 
@@ -549,7 +549,7 @@ inline Flow ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::maxflow()
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline std::pair<BlockIdx, BlockIdx> ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::block_key(
+inline std::pair<BlockIdx, BlockIdx> ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::block_key(
     BlockIdx i, BlockIdx j) const noexcept
 {
     return i < j ? std::make_pair(i, j) : std::make_pair(j, i);
@@ -557,8 +557,8 @@ inline std::pair<BlockIdx, BlockIdx> ParallelGraph<Cap, Term, Flow, ArcIdx, Node
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
 inline std::pair<
-    std::list<typename ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::BoundarySegment>, BlockIdx>
-ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::next_boundary_segment_set()
+    std::list<typename ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::BoundarySegment>, BlockIdx>
+ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::next_boundary_segment_set()
 {
     // NOTE: We assume the global lock is grabbed at this point so no other threads are scanning
     std::list<BoundarySegment> out;
@@ -596,7 +596,7 @@ ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::next_boundary_segment_set()
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline Flow ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::maxflow()
+inline Flow ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::maxflow()
 {
     NodeIdx crnt_node = INVALID_NODE;
 
@@ -662,7 +662,7 @@ inline Flow ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::maxflow
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::init_maxflow()
+inline void ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::init_maxflow()
 {
     assert(nodes.size() == node_blocks.size());
 
@@ -704,7 +704,7 @@ inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::init_maxflow()
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::init_maxflow()
+inline void ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::init_maxflow()
 {
     assert(nodes.size() == node_blocks.size());
 
@@ -738,7 +738,7 @@ inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::init_ma
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::make_active(NodeIdx i)
+inline void ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::make_active(NodeIdx i)
 {
     if (nodes[i].next_active == INVALID_NODE) {
         // It's not in the active list yet
@@ -753,21 +753,21 @@ inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::make_ac
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::make_front_orphan(NodeIdx i)
+inline void ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::make_front_orphan(NodeIdx i)
 {
     nodes[i].parent = ORPHAN_ARC;
     orphan_nodes.push_front(i);
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::make_back_orphan(NodeIdx i)
+inline void ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::make_back_orphan(NodeIdx i)
 {
     nodes[i].parent = ORPHAN_ARC;
     orphan_nodes.push_back(i);
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline NodeIdx ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::next_active()
+inline NodeIdx ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::next_active()
 {
     NodeIdx i;
     // Pop nodes from the active list until we find a valid one or run out of nodes
@@ -792,7 +792,7 @@ inline NodeIdx ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::next
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::augment(ArcIdx middle_idx)
+inline void ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::augment(ArcIdx middle_idx)
 {
     Arc &middle = arcs[middle_idx];
     Arc &middle_sister = sister(middle_idx);
@@ -812,7 +812,7 @@ inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::augment
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline Term ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::tree_bottleneck(
+inline Term ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::tree_bottleneck(
     NodeIdx start, bool source_tree) const
 {
     NodeIdx i = start;
@@ -831,7 +831,7 @@ inline Term ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::tree_bo
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::augment_tree(
+inline void ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::augment_tree(
     NodeIdx start, Term bottleneck, bool source_tree)
 {
     NodeIdx i = start;
@@ -856,14 +856,14 @@ inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::augment
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline ArcIdx ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::grow_search_tree(NodeIdx start)
+inline ArcIdx ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::grow_search_tree(NodeIdx start)
 {
     return nodes[start].is_sink ? grow_search_tree_impl<false>(start) : grow_search_tree_impl<true>(start);
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
 template<bool source>
-inline ArcIdx ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::grow_search_tree_impl(
+inline ArcIdx ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::grow_search_tree_impl(
     NodeIdx start_idx)
 {
     const Node& start = nodes[start_idx];
@@ -898,7 +898,7 @@ inline ArcIdx ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::grow_
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::process_orphan(NodeIdx i)
+inline void ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::process_orphan(NodeIdx i)
 {
     if (nodes[i].is_sink) {
         process_orphan_impl<false>(i);
@@ -909,7 +909,7 @@ inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::process
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
 template<bool source>
-inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::process_orphan_impl(NodeIdx i)
+inline void ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::process_orphan_impl(NodeIdx i)
 {
     Node &n = nodes[i];
     static const int32_t INF_DIST = std::numeric_limits<int32_t>::max();
@@ -983,7 +983,7 @@ inline void ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::GraphBlock::process
 }
 
 template<class Cap, class Term, class Flow, class ArcIdx, class NodeIdx>
-inline bool ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::should_activate(NodeIdx i, NodeIdx j)
+inline bool ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::should_activate(NodeIdx i, NodeIdx j)
 {
     Node &ni = nodes[i];
     Node &nj = nodes[j];
@@ -996,4 +996,4 @@ inline bool ParallelGraph<Cap, Term, Flow, ArcIdx, NodeIdx>::should_activate(Nod
 
 } // namespace shrdr
 
-#endif // SHRDR_PARALLEL_GRAPH_H__
+#endif // SHRDR_PARALLEL_BK_H__
