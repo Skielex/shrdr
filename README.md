@@ -28,9 +28,10 @@ The M-QPBO and P-QPBO algorithms in the package are being presented at ICCV 2021
 [![Teaser video](https://img.youtube.com/vi/79vvYSLXA4s/0.jpg)](https://youtu.be/79vvYSLXA4s)
 
 ## Related repositories
-- [slgbuilder](https://github.com/Skielex/slgbuilder) (CVPR 2020)
-- [thinqpbo](https://github.com/Skielex/thinqpbo)
-- [thinmaxflow](https://github.com/Skielex/thinmaxflow)
+- [slgbuilder](https://github.com/Skielex/slgbuilder) Python package (CVPR 2020)
+- [thinqpbo](https://github.com/Skielex/thinqpbo) Python package
+- [thinmaxflow](https://github.com/Skielex/thinmaxflow) Python package
+- [C++ implementations](https://github.com/patmjen/maxflow_algorithms) of max-flow/min-cut algorithms
 
 ## License
 MIT License (see LICENSE file).
