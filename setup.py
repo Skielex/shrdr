@@ -53,8 +53,8 @@ def fill_templates(file_name, new_file_name, cap_types, arc_types, node_types):
         full_template = []
 
         for ct in cap_types:
-            # Insert CapType.
-            t_ct = t.replace('<CapType>', ct)
+            # Insert CapType and TermType as CapType.
+            t_ct = t.replace('<CapType>', ct).replace('<TermType>', ct)
             # Insert FlowType.
             t_ct = t_ct.replace('<FlowType>', 'FlowInt' if 'Int' in ct else 'FlowFloat')
             for at in arc_types:
@@ -98,7 +98,7 @@ for file_name in glob('./shrdr/**/*.pyx.template', recursive=True):
     fill_templates(file_name, file_name.replace('.pyx.template', '.pyx'), cap_types, arc_types, node_types)
 
 setup(name="shrdr",
-      version="0.1.0",
+      version="0.2.0",
       author="Niels Jeppesen",
       author_email="niejep@dtu.dk",
       description="A library of fast s-t graph cut algorithms for Python",

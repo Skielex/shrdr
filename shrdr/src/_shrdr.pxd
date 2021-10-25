@@ -5,9 +5,14 @@ from libc.stdint cimport int8_t, uint16_t, int64_t
 from libcpp cimport bool
 
 ctypedef uint16_t BlockIdx
-ctypedef int8_t NodeLabel
 
-cdef extern from "core/qpbo.h" namespace "mbk":
+cdef extern from "core/util.h" namespace "shrdr":
+    ctypedef enum NodeLabel:
+        SOURCE = 0
+        SINK = 1
+        UNKNOWN = -1
+
+cdef extern from "core/qpbo.h" namespace "shrdr":
     cdef cppclass Qpbo[Cap, Flow, ArcIdx, NodeIdx]:
         Qpbo(size_t expected_nodes, size_t expected_pairwise_terms, bool expect_nonsubmodular)
         NodeIdx add_node(int num)
@@ -18,7 +23,7 @@ cdef extern from "core/qpbo.h" namespace "mbk":
         void solve()
         void compute_weak_persistencies()
 
-cdef extern from "core/parallel_qpbo.h" namespace "mbk":
+cdef extern from "core/parallel_qpbo.h" namespace "shrdr":
     cdef cppclass ParallelQpbo[Cap, Flow, ArcIdx, NodeIdx]:
         ParallelQpbo(size_t expected_nodes, size_t expected_pairwise_terms, bool expect_nonsubmodular, size_t expected_blocks)
         NodeIdx add_node(int num, BlockIdx block)
@@ -29,5 +34,27 @@ cdef extern from "core/parallel_qpbo.h" namespace "mbk":
         Flow compute_twice_energy()
         void solve()
         void compute_weak_persistencies()
+        unsigned int get_num_threads()
+        void set_num_threads(unsigned int num)
+
+cdef extern from "core/bk.h" namespace "shrdr":
+    cdef cppclass Bk[Cap, Term, Flow, ArcIdx, NodeIdx]:
+        Bk(size_t expected_nodes, size_t expected_pairwise_terms)
+        NodeIdx add_node(int num)
+        void add_tweight(NodeIdx i, Term cap_source, Term cap_sink)
+        void add_edge(NodeIdx i, NodeIdx j, Cap cap, Cap rev_cap, bool merge_duplicates)
+        Flow maxflow(bool reuse_trees)
+        Flow get_maxflow()
+        NodeLabel what_segment(NodeIdx i, NodeLabel default_segment) const
+        void mark_node(NodeIdx i)
+
+cdef extern from "core/parallel_bk.h" namespace "shrdr":
+    cdef cppclass ParallelBk[Cap, Term, Flow, ArcIdx, NodeIdx]:
+        ParallelBk(size_t expected_nodes, size_t expected_pairwise_terms, size_t expected_blocks)
+        NodeIdx add_node(int num, BlockIdx block)
+        void add_tweight(NodeIdx i, Term cap_source, Term cap_sink)
+        void add_edge(NodeIdx i, NodeIdx j, Cap cap, Cap rev_cap, bool merge_duplicates)
+        Flow maxflow()
+        NodeLabel what_segment(NodeIdx i, NodeLabel default_segment) const
         unsigned int get_num_threads()
         void set_num_threads(unsigned int num)
