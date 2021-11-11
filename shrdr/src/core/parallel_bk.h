@@ -426,7 +426,7 @@ inline Flow ParallelBk<Cap, Term, Flow, ArcIdx, NodeIdx>::maxflow()
 
     Flow flow = 0;
 
-    std::atomic<BlockIdx> processed_blocks = 0;
+    std::atomic<BlockIdx> processed_blocks(0);
     std::vector<std::thread> threads;
 
     init_maxflow();
