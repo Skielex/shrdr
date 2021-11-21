@@ -836,7 +836,7 @@ inline void ParallelQpbo<Cap, Flow, ArcIdx, NodeIdx>::solve()
     auto last = std::unique(block_idxs.begin(), block_idxs.end());
     for (auto iter = block_idxs.begin(); iter != last; ++iter) {
         BlockIdx b = *iter;
-        if (blocks[b].stage == 0) {
+        if (!all_submodular && blocks[b].stage == 0) {
             // If the block hasn't been transformed yet, now is the time...
             transform_to_second_stage(b);
         }
