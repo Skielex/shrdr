@@ -60,6 +60,9 @@ cdef class Qpbo<ClassNameExt>:
     def get_label(self, <NodeType> i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -117,6 +120,9 @@ cdef class ParallelQpbo<ClassNameExt>:
 
     def get_label(self, <NodeType> i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()

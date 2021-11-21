@@ -60,6 +60,9 @@ cdef class QpboCapInt16ArcIdxUInt32NodeIdxUInt32:
     def get_label(self, NodeIdxUInt32 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -116,6 +119,9 @@ cdef class ParallelQpboCapInt16ArcIdxUInt32NodeIdxUInt32:
 
     def get_label(self, NodeIdxUInt32 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
@@ -276,6 +282,9 @@ cdef class QpboCapInt16ArcIdxUInt32NodeIdxUInt64:
     def get_label(self, NodeIdxUInt64 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -332,6 +341,9 @@ cdef class ParallelQpboCapInt16ArcIdxUInt32NodeIdxUInt64:
 
     def get_label(self, NodeIdxUInt64 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
@@ -492,6 +504,9 @@ cdef class QpboCapInt16ArcIdxUInt64NodeIdxUInt32:
     def get_label(self, NodeIdxUInt32 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -548,6 +563,9 @@ cdef class ParallelQpboCapInt16ArcIdxUInt64NodeIdxUInt32:
 
     def get_label(self, NodeIdxUInt32 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
@@ -708,6 +726,9 @@ cdef class QpboCapInt16ArcIdxUInt64NodeIdxUInt64:
     def get_label(self, NodeIdxUInt64 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -764,6 +785,9 @@ cdef class ParallelQpboCapInt16ArcIdxUInt64NodeIdxUInt64:
 
     def get_label(self, NodeIdxUInt64 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
@@ -924,6 +948,9 @@ cdef class QpboCapInt32ArcIdxUInt32NodeIdxUInt32:
     def get_label(self, NodeIdxUInt32 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -980,6 +1007,9 @@ cdef class ParallelQpboCapInt32ArcIdxUInt32NodeIdxUInt32:
 
     def get_label(self, NodeIdxUInt32 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
@@ -1140,6 +1170,9 @@ cdef class QpboCapInt32ArcIdxUInt32NodeIdxUInt64:
     def get_label(self, NodeIdxUInt64 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -1196,6 +1229,9 @@ cdef class ParallelQpboCapInt32ArcIdxUInt32NodeIdxUInt64:
 
     def get_label(self, NodeIdxUInt64 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
@@ -1356,6 +1392,9 @@ cdef class QpboCapInt32ArcIdxUInt64NodeIdxUInt32:
     def get_label(self, NodeIdxUInt32 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -1412,6 +1451,9 @@ cdef class ParallelQpboCapInt32ArcIdxUInt64NodeIdxUInt32:
 
     def get_label(self, NodeIdxUInt32 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
@@ -1572,6 +1614,9 @@ cdef class QpboCapInt32ArcIdxUInt64NodeIdxUInt64:
     def get_label(self, NodeIdxUInt64 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -1628,6 +1673,9 @@ cdef class ParallelQpboCapInt32ArcIdxUInt64NodeIdxUInt64:
 
     def get_label(self, NodeIdxUInt64 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
@@ -1788,6 +1836,9 @@ cdef class QpboCapInt64ArcIdxUInt32NodeIdxUInt32:
     def get_label(self, NodeIdxUInt32 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -1844,6 +1895,9 @@ cdef class ParallelQpboCapInt64ArcIdxUInt32NodeIdxUInt32:
 
     def get_label(self, NodeIdxUInt32 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
@@ -2004,6 +2058,9 @@ cdef class QpboCapInt64ArcIdxUInt32NodeIdxUInt64:
     def get_label(self, NodeIdxUInt64 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -2060,6 +2117,9 @@ cdef class ParallelQpboCapInt64ArcIdxUInt32NodeIdxUInt64:
 
     def get_label(self, NodeIdxUInt64 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
@@ -2220,6 +2280,9 @@ cdef class QpboCapInt64ArcIdxUInt64NodeIdxUInt32:
     def get_label(self, NodeIdxUInt32 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -2276,6 +2339,9 @@ cdef class ParallelQpboCapInt64ArcIdxUInt64NodeIdxUInt32:
 
     def get_label(self, NodeIdxUInt32 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
@@ -2436,6 +2502,9 @@ cdef class QpboCapInt64ArcIdxUInt64NodeIdxUInt64:
     def get_label(self, NodeIdxUInt64 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -2492,6 +2561,9 @@ cdef class ParallelQpboCapInt64ArcIdxUInt64NodeIdxUInt64:
 
     def get_label(self, NodeIdxUInt64 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
@@ -2652,6 +2724,9 @@ cdef class QpboCapFloat32ArcIdxUInt32NodeIdxUInt32:
     def get_label(self, NodeIdxUInt32 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -2708,6 +2783,9 @@ cdef class ParallelQpboCapFloat32ArcIdxUInt32NodeIdxUInt32:
 
     def get_label(self, NodeIdxUInt32 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
@@ -2868,6 +2946,9 @@ cdef class QpboCapFloat32ArcIdxUInt32NodeIdxUInt64:
     def get_label(self, NodeIdxUInt64 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -2924,6 +3005,9 @@ cdef class ParallelQpboCapFloat32ArcIdxUInt32NodeIdxUInt64:
 
     def get_label(self, NodeIdxUInt64 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
@@ -3084,6 +3168,9 @@ cdef class QpboCapFloat32ArcIdxUInt64NodeIdxUInt32:
     def get_label(self, NodeIdxUInt32 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -3140,6 +3227,9 @@ cdef class ParallelQpboCapFloat32ArcIdxUInt64NodeIdxUInt32:
 
     def get_label(self, NodeIdxUInt32 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
@@ -3300,6 +3390,9 @@ cdef class QpboCapFloat32ArcIdxUInt64NodeIdxUInt64:
     def get_label(self, NodeIdxUInt64 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -3356,6 +3449,9 @@ cdef class ParallelQpboCapFloat32ArcIdxUInt64NodeIdxUInt64:
 
     def get_label(self, NodeIdxUInt64 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
@@ -3516,6 +3612,9 @@ cdef class QpboCapFloat64ArcIdxUInt32NodeIdxUInt32:
     def get_label(self, NodeIdxUInt32 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -3572,6 +3671,9 @@ cdef class ParallelQpboCapFloat64ArcIdxUInt32NodeIdxUInt32:
 
     def get_label(self, NodeIdxUInt32 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
@@ -3732,6 +3834,9 @@ cdef class QpboCapFloat64ArcIdxUInt32NodeIdxUInt64:
     def get_label(self, NodeIdxUInt64 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -3788,6 +3893,9 @@ cdef class ParallelQpboCapFloat64ArcIdxUInt32NodeIdxUInt64:
 
     def get_label(self, NodeIdxUInt64 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
@@ -3948,6 +4056,9 @@ cdef class QpboCapFloat64ArcIdxUInt64NodeIdxUInt32:
     def get_label(self, NodeIdxUInt32 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -4004,6 +4115,9 @@ cdef class ParallelQpboCapFloat64ArcIdxUInt64NodeIdxUInt32:
 
     def get_label(self, NodeIdxUInt32 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
@@ -4164,6 +4278,9 @@ cdef class QpboCapFloat64ArcIdxUInt64NodeIdxUInt64:
     def get_label(self, NodeIdxUInt64 i):
         return self.c_qpbo.get_label(i)
 
+    def get_flow(self):
+        return self.c_qpbo.get_flow()
+
     def compute_twice_energy(self):
         return self.c_qpbo.compute_twice_energy()
 
@@ -4220,6 +4337,9 @@ cdef class ParallelQpboCapFloat64ArcIdxUInt64NodeIdxUInt64:
 
     def get_label(self, NodeIdxUInt64 i):
         return self.c_pqpbo.get_label(i)
+
+    def get_flow(self):
+        return self.c_pqpbo.get_flow()
 
     def compute_twice_energy(self):
         return self.c_pqpbo.compute_twice_energy()
