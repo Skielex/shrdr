@@ -66,7 +66,7 @@ public:
     static const ArcIdx INVALID_ARC = ~ArcIdx(0); // -1 for signed type, max. value for unsigned type
     static const ArcIdx TERMINAL_ARC = INVALID_ARC - 1;
     static const ArcIdx ORPHAN_ARC = INVALID_ARC - 2;
-    static const Cap INACTIVE_ARC = -1;
+    static constexpr Cap INACTIVE_ARC = Cap(-1);
 
     ParallelBk(size_t expected_nodes, size_t expected_arcs, size_t expected_blocks);
 
