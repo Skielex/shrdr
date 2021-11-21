@@ -73,7 +73,7 @@ public:
     std::pair<NodeIdx, NodeIdx> get_arc_ends(ArcIdx ai) const;
 
     Flow compute_twice_energy() const;
-    inline Cap get_flow() const noexcept { return flow; };
+    inline Flow get_flow() const noexcept { return flow; };
 
     size_t get_primal_node_num() const noexcept { return nodes.size() - (stage > 0) * node_shift; };
     size_t get_total_node_num() const noexcept { return nodes.size(); };
