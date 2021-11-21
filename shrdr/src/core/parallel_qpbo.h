@@ -26,7 +26,7 @@ namespace shrdr {
 using BlockIdx = uint16_t; // We assume 65536 is enough blocks
 using BoundaryKey = uint32_t; // Must be 2 x sizeof(BlockIdx)
 using Time = uint32_t;
-using Dist = uint16_t;
+using Dist = uint32_t;
 
 static_assert(sizeof(BoundaryKey) == 2 * sizeof(BlockIdx),
     "BoundaryKey must be double the size of BlockIdx");

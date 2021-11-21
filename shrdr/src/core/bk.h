@@ -13,7 +13,7 @@
 namespace shrdr {
 
 using Time = uint32_t;
-using Dist = uint16_t;
+using Dist = uint32_t;
 
 template <class Cap, class Term, class Flow, class ArcIdx = int32_t, class NodeIdx = int32_t>
 class Bk {
