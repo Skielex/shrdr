@@ -4,7 +4,7 @@ The goal of this package is to include a number of fast graph cut algorithms. Cu
 ## Installation
 Install from repository (requires `Cython`):
 ```
-clone https://github.com/Skielex/shrdr
+git clone https://github.com/Skielex/shrdr
 cd shrdr
 pip install .
 ```
