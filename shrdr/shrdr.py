@@ -1,5 +1,6 @@
 """Module containing functions for creating solvers."""
 import numpy as np
+import numpy.typing as npt
 
 from . import _shrdr
 from .types import arc_index_types_lookup, capacity_types_lookup, node_index_types_lookup
@@ -40,12 +41,12 @@ def _create_class_name(base_name, capacity_type, arc_index_type, node_index_type
 
 
 def qpbo(
-    expected_nodes=0,
-    expected_pairwise_terms=0,
-    expect_nonsubmodular=True,
-    capacity_type='int32',
-    arc_index_type='uint32',
-    node_index_type='uint32',
+    expected_nodes: int = 0,
+    expected_pairwise_terms: int = 0,
+    expect_nonsubmodular: bool = True,
+    capacity_type: npt.DTypeLike = 'int32',
+    arc_index_type: npt.DTypeLike = 'uint32',
+    node_index_type: npt.DTypeLike = 'uint32',
 ):
     """Returns a new Qpbo class instance of the specified type."""
     class_name = _create_class_name('Qpbo', capacity_type, arc_index_type, node_index_type)
@@ -54,13 +55,13 @@ def qpbo(
 
 
 def parallel_qpbo(
-    expected_nodes=0,
-    expected_pairwise_terms=0,
-    expect_nonsubmodular=True,
-    expected_blocks=0,
-    capacity_type='int32',
-    arc_index_type='uint32',
-    node_index_type='uint32',
+    expected_nodes: int = 0,
+    expected_pairwise_terms: int = 0,
+    expect_nonsubmodular: bool = True,
+    expected_blocks: int = 0,
+    capacity_type: npt.DTypeLike = 'int32',
+    arc_index_type: npt.DTypeLike = 'uint32',
+    node_index_type: npt.DTypeLike = 'uint32',
 ):
     """Returns a new ParallelQpbo class instance of the specified type."""
     class_name = _create_class_name('ParallelQpbo', capacity_type, arc_index_type, node_index_type)
@@ -69,27 +70,27 @@ def parallel_qpbo(
 
 
 def bk(
-    expected_nodes=0,
-    expected_pairwise_terms=0,
-    capacity_type='int32',
-    arc_index_type='uint32',
-    node_index_type='uint32',
+    expected_nodes: int = 0,
+    expected_pairwise_terms: int = 0,
+    capacity_type: npt.DTypeLike = 'int32',
+    arc_index_type: npt.DTypeLike = 'uint32',
+    node_index_type: npt.DTypeLike = 'uint32',
 ):
     """Returns a new Bk class instance of the specified type."""
     class_name = _create_class_name('Bk', capacity_type, arc_index_type, node_index_type)
     class_ctor = getattr(_shrdr, class_name)
     return class_ctor(expected_nodes, expected_pairwise_terms)
 
+
 def parallel_bk(
-    expected_nodes=0,
-    expected_pairwise_terms=0,
-    expected_blocks=0,
-    capacity_type='int32',
-    arc_index_type='uint32',
-    node_index_type='uint32',
+    expected_nodes: int = 0,
+    expected_pairwise_terms: int = 0,
+    expected_blocks: int = 0,
+    capacity_type: npt.DTypeLike = 'int32',
+    arc_index_type: npt.DTypeLike = 'uint32',
+    node_index_type: npt.DTypeLike = 'uint32',
 ):
     """Returns a new ParallelBk class instance of the specified type."""
     class_name = _create_class_name('ParallelBk', capacity_type, arc_index_type, node_index_type)
     class_ctor = getattr(_shrdr, class_name)
     return class_ctor(expected_nodes, expected_pairwise_terms, expected_blocks)
-
